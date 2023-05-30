@@ -16,43 +16,21 @@ public class CoordinatePair
         Place1 = place1 != "" ? place1 : "NaN"; 
         Place2 = place2 != "" ? place2 : "NaN"; 
         Name = name != "" ? place1 : "NaN"; 
-        Address = address != "" ? place1 : "NaN"; 
-        /* the same as
-        if (place1 != "")
-        {
-            Place1 = place1;
-        }
-        else
-        {
-            Place1 = "NaN";
-        } */
+        Address = address != "" ? place1 : "NaN";
     }
 }
 
 public class Rectangle
 {
     public CoordinatePair A { get; } // lat_min lon_min
-    public CoordinatePair B { get; set; } // lat_min lon_max
     public CoordinatePair C { get; } // lat_max lon_max
-    public CoordinatePair D { set; get; } // lat_max lon_min
-    public double Height { get; set; }
-    public double Length { get; set; }
 
-    public Rectangle(double latMin, double lonMax) // not sure if we need this
-    {
-        A = new CoordinatePair(latMin, lonMax - Height);
-        B = new CoordinatePair(latMin, lonMax);
-        C = new CoordinatePair(latMin + Length, lonMax);
-        D = new CoordinatePair(latMin + Length, lonMax - Height);
-    }
-    
     public Rectangle(CoordinatePair lowLeft, CoordinatePair upRight)
     {
         A = lowLeft;
         C = upRight;
-        
-        B = new CoordinatePair(A.X, C.Y);
-        D = new CoordinatePair(C.X, A.Y);
+        //B = new CoordinatePair(A.X, C.Y);
+        //D = new CoordinatePair(C.X, A.Y);
     }
     
 }
@@ -78,97 +56,66 @@ public class Rtree
     private Node _root;
     private bool _check; // true - розбиття по Х; false - розбиття по Y;
     
-    public void Build(List<CoordinatePair> points, Node node)
+    public void Build(List<CoordinatePair> points, Node node = null)
     {
         if (node == null)
         {
             var first_rect = MakeRect(points);
-            _root = new Node(first_rect);
+            node = new Node(first_rect);
         }
-        else
-        {
-            _root = node;
-        }
-        
+        _root = node;
+
         if (points.Count <= 10)
         {
             _root.Points = points;
             return;
         }
         
-        var leftPoints = new List<CoordinatePair>();
-        var rightPoints = new List<CoordinatePair>();
-        
-        // сортуємо список щоб знайти елемент по середині і
-        // розділити список на дві частини (перша то є менша частина, а друга то є більша)
+        List<CoordinatePair> leftPoints;
+        List<CoordinatePair> rightPoints;
+        CoordinatePair new_A;
+        CoordinatePair new_C;
+
         if (_check)
         {
-            points.Sort((a, b) => a.X.CompareTo(b.X)); 
-            // сортує відносно latitude; a і b це CoordinatePair з points
+            points.Sort((a, b) => a.X.CompareTo(b.X)); // сортує відносно latitude; a і b це CoordinatePair з points
             
             var middle = points.Count / 2;
             leftPoints = points.GetRange(0, middle + 1);
-            rightPoints = points.GetRange(middle, points.Count - middle); 
+            rightPoints = points.GetRange(middle, points.Count - middle);
             
-            var A_new = node.Rect.A;
-            A_new.X = points[middle].X;
+            new_A = new CoordinatePair(points[middle].X, _root.Rect.A.Y);
+            new_C = new CoordinatePair(points[middle].X, _root.Rect.C.Y);
 
-            var C_new = node.Rect.C;
-            C_new.X = points[middle].X;
-            
-            
-            var leftRect = new Rectangle(node.Rect.A, C_new);
-            var rightRect = new Rectangle(A_new, node.Rect.A);
-            //var leftRect = new Rectangle(A_new, B_new);
-            //var rightRect = MakeRect(rightPoints);
-        
-            _root.LeftChild = new Node(leftRect)
-            {
-                Points = leftPoints
-            };
-            _root.RightChild = new Node(rightRect)
-            {
-                Points = rightPoints
-            };
-
-            Build(leftPoints, _root.LeftChild);
-            Build(rightPoints, _root.RightChild);
         }
         else
         {
-            points.Sort((a, b) => a.Y.CompareTo(b.Y)); 
-            // сортує відносно longitude; a і b це CoordinatePair з points
+            points.Sort((a, b) => a.Y.CompareTo(b.Y)); // сортує відносно longitude; a і b це CoordinatePair з points
             
             var middle = points.Count / 2;
             leftPoints = points.GetRange(0, middle + 1);
             rightPoints = points.GetRange(middle, points.Count - middle); 
             
-            var A_new = node.Rect.A;
-            A_new.Y = points[middle].Y;
+            new_A = new CoordinatePair(_root.Rect.A.X, points[middle].Y);
+            new_C = new CoordinatePair(_root.Rect.C.Y, points[middle].Y);
 
-            var C_new = node.Rect.C;
-            C_new.Y = points[middle].Y;
-            
-            
-            var leftRect = new Rectangle(node.Rect.A, C_new);
-            var rightRect = new Rectangle(A_new, node.Rect.A);
-            //var leftRect = new Rectangle(A_new, B_new);
-            //var rightRect = MakeRect(rightPoints);
-        
-            _root.LeftChild = new Node(leftRect)
-            {
-                Points = leftPoints
-            };
-            _root.RightChild = new Node(rightRect)
-            {
-                Points = rightPoints
-            };
-
-            Build(leftPoints, _root.LeftChild);
-            Build(rightPoints, _root.RightChild);
         }
-        _check = !_check; // змінюємо на протилежний 
         
+        var leftRect = new Rectangle(_root.Rect.A, new_C);
+        var rightRect = new Rectangle(new_A, _root.Rect.A);
+
+        _root.LeftChild = new Node(leftRect)
+        {
+            Points = leftPoints
+        };
+        _root.RightChild = new Node(rightRect)
+        {
+            Points = rightPoints
+        };
+            
+        _check = !_check;
+        Build(leftPoints, _root.LeftChild);
+        Build(rightPoints, _root.RightChild);
     }
 
     private Rectangle MakeRect(List<CoordinatePair> points)

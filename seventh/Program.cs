@@ -1,6 +1,6 @@
 ﻿using seventh;
 
-Console.WriteLine("\nEnter latitude, longitude and radius (with space):"); // example 49,06183 22,68685 5
+Console.WriteLine("\nEnter latitude, longitude and radius (with space):"); // example 49,06183 22,68685 2
 var input = Console.ReadLine().Split(" ");
 var lat = double.Parse(input[0]) * Math.PI / 180;
 var lon = double.Parse(input[1]);
@@ -27,6 +27,7 @@ foreach (var line in File.ReadAllLines("ukraine_poi.csv"))
         }
     }
 }
+
 Console.WriteLine("\nList of locations in the area:");
 var count = 1;
 if (result.Count > 0)
@@ -52,16 +53,15 @@ else
 // потім пройтись по кожній точці з прямокутника і додати у список
 
 var all_points = new List<CoordinatePair>();
-//File.ReadAllLines("ukraine_poi.csv").ToList();
 foreach (var line2 in File.ReadAllLines("ukraine_poi.csv"))
 {
     var line_el = line2.Split(";");
     if (line_el[0] != "")
     {
-        all_points.Add(new CoordinatePair(Convert.ToDouble(line_el[0].Replace(',', '.')), Convert.ToDouble(line_el[1].Replace(',', '.')), line_el[2], line_el[3], line_el[4]));
+        all_points.Add(new CoordinatePair(Convert.ToDouble(line_el[0]), Convert.ToDouble(line_el[1]), line_el[2], line_el[3], line_el[4]));
         //Console.WriteLine(Convert.ToDouble(line_el[0].Replace(',', '.')));
     }
 }
 
 var tree = new Rtree();
-tree.Build(all_points, null);
+tree.Build(all_points);
