@@ -2,7 +2,7 @@ namespace seventh;
 
 public class CoordinatePair
 {
-    public double X { get; } // latitude
+    public double X { get; set; } // latitude
     public double Y { get; } // longitude
     public string? Place1 { get; }
     public string Place2 { get; }
@@ -32,17 +32,29 @@ public class CoordinatePair
 public class Rectangle
 {
     public CoordinatePair A { get; } // lat_min lon_min
-    public CoordinatePair B { get; } // lat_min lon_max
+    public CoordinatePair B { get; set; } // lat_min lon_max
     public CoordinatePair C { get; } // lat_max lon_max
-    public CoordinatePair D { get; } // lat_max lon_min
+    public CoordinatePair D { set; get; } // lat_max lon_min
+    public double Height { get; set; }
+    public double Length { get; set; }
 
-    public Rectangle(double lat_max, double lon_max, double lat_min, double lon_min)
+    public Rectangle(double latMin, double lonMax) // not sure if we need this
     {
-        A = new CoordinatePair(lat_min, lon_min);
-        B = new CoordinatePair(lat_min, lon_max);
-        C = new CoordinatePair(lat_max, lon_max);
-        D = new CoordinatePair(lat_max, lon_min);
+        A = new CoordinatePair(latMin, lonMax - Height);
+        B = new CoordinatePair(latMin, lonMax);
+        C = new CoordinatePair(latMin + Length, lonMax);
+        D = new CoordinatePair(latMin + Length, lonMax - Height);
     }
+    
+    public Rectangle(CoordinatePair lowLeft, CoordinatePair upRight)
+    {
+        A = lowLeft;
+        C = upRight;
+        
+        B = new CoordinatePair(A.X, C.Y);
+        D = new CoordinatePair(C.X, A.Y);
+    }
+    
 }
 
 public class Node
@@ -66,7 +78,7 @@ public class Rtree
     private Node _root;
     private bool _check; // true - розбиття по Х; false - розбиття по Y;
     
-    public void Build(List<CoordinatePair> points, Node node = null)
+    public void Build(List<CoordinatePair> points, Node node)
     {
         if (node == null)
         {
@@ -84,48 +96,58 @@ public class Rtree
             return;
         }
         
-        // сортуємо список щоб знайти елемент по середині і розділити список на дві частини (перша то є менша частина, а дурга то є більша)
+        // сортуємо список щоб знайти елемент по середині і
+        // розділити список на дві частини (перша то є менша частина, а друга то є більша)
         if (_check)
         {
-            points.Sort((a, b) => a.X.CompareTo(b.X)); // сортує відносно latitude; a і b це CoordinatePair з points
+            points.Sort((a, b) => a.X.CompareTo(b.X)); 
+            // сортує відносно latitude; a і b це CoordinatePair з points
         }
         else
         {
-            points.Sort((a, b) => a.Y.CompareTo(b.Y)); // сортує відносно longitude; a і b це CoordinatePair з points
+            points.Sort((a, b) => a.Y.CompareTo(b.Y)); 
+            // сортує відносно longitude; a і b це CoordinatePair з points
         }
         _check = !_check; // змінюємо на протилежний 
 
         var middle = points.Count / 2;
-        var left_points = points.GetRange(0, middle); // від нульового елемента до середини
-        var right_points = points.GetRange(middle, points.Count - middle); // від середини до останнього
-        
-        var leftRect = MakeRect(left_points);
-        var rightRect = MakeRect(right_points);
-        
-        _root.LeftChild = new Node(leftRect);
-        _root.LeftChild.Points = left_points;
-        _root.RightChild = new Node(rightRect);
-        _root.RightChild.Points = right_points;
+        var leftPoints = points.GetRange(0, middle); // від нульового елемента до середини
+        var rightPoints = points.GetRange(middle, points.Count - middle); // від середини до останнього
 
-        Build(left_points, _root.LeftChild);
-        Build(right_points, _root.RightChild);
+        // still have to come up with this part
+        // as when we divide left/right we change one vertices
+        // and when upper/lower other
+        
+        //var A_new = node.Rect.A;
+        //A_new.X = right_points[0].X;
+
+        // not sure about this part either
+        var leftRect = new Rectangle(node.Rect.A, node.Rect.B);
+        
+        var rightRect = MakeRect(rightPoints);
+        
+        _root.LeftChild = new Node(leftRect)
+        { Points = leftPoints };
+        _root.RightChild = new Node(rightRect)
+        { Points = rightPoints };
+
+        Build(leftPoints, _root.LeftChild);
+        Build(rightPoints, _root.RightChild);
     }
 
     private Rectangle MakeRect(List<CoordinatePair> points)
     {
-        double lat_max = 0;
-        double lon_max = 0;
-        var lat_min = double.MaxValue;
-        var lon_min = double.MaxValue;
+        var listX = new List<double>();
+        var listY = new List<double>();
+        points.ForEach(pair => listX.Add(pair.X));
+        points.ForEach(pair => listY.Add(pair.Y));
 
-        foreach (var point in points)
-        {
-            lat_max = Math.Max(lat_max, point.X);
-            lon_max = Math.Max(lon_max, point.Y);
-            lat_min = Math.Min(lat_min, point.X);
-            lon_min = Math.Min(lon_min, point.Y);
-        }
+        var lat_min = listX.Min();
+        var lat_max = listX.Max();
+        var lon_min = listY.Min();
+        var lon_max = listY.Max();
 
-        return new Rectangle(lat_max, lon_max, lat_min, lon_min);
+        return new Rectangle(new CoordinatePair(lat_min, lon_min), 
+            new CoordinatePair(lat_max, lon_max));
     }
 }

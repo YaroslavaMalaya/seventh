@@ -58,9 +58,10 @@ foreach (var line2 in File.ReadAllLines("ukraine_poi.csv"))
     var line_el = line2.Split(";");
     if (line_el[0] != "")
     {
-        all_points.Add(new CoordinatePair(double.Parse(line_el[0]), double.Parse(line_el[1]), line_el[2], line_el[3], line_el[4]));
+        all_points.Add(new CoordinatePair(Convert.ToDouble(line_el[0].Replace(',', '.')), Convert.ToDouble(line_el[1].Replace(',', '.')), line_el[2], line_el[3], line_el[4]));
+        //Console.WriteLine(Convert.ToDouble(line_el[0].Replace(',', '.')));
     }
 }
 
 var tree = new Rtree();
-tree.Build(all_points);
+tree.Build(all_points, null);
