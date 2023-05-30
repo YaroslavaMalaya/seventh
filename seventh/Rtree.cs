@@ -3,7 +3,7 @@ namespace seventh;
 public class CoordinatePair
 {
     public double X { get; set; } // latitude
-    public double Y { get; } // longitude
+    public double Y { get; set; } // longitude
     public string? Place1 { get; }
     public string Place2 { get; }
     public string Name { get; }
@@ -96,43 +96,79 @@ public class Rtree
             return;
         }
         
+        var leftPoints = new List<CoordinatePair>();
+        var rightPoints = new List<CoordinatePair>();
+        
         // сортуємо список щоб знайти елемент по середині і
         // розділити список на дві частини (перша то є менша частина, а друга то є більша)
         if (_check)
         {
             points.Sort((a, b) => a.X.CompareTo(b.X)); 
             // сортує відносно latitude; a і b це CoordinatePair з points
+            
+            var middle = points.Count / 2;
+            leftPoints = points.GetRange(0, middle + 1);
+            rightPoints = points.GetRange(middle, points.Count - middle); 
+            
+            var A_new = node.Rect.A;
+            A_new.X = points[middle].X;
+
+            var C_new = node.Rect.C;
+            C_new.X = points[middle].X;
+            
+            
+            var leftRect = new Rectangle(node.Rect.A, C_new);
+            var rightRect = new Rectangle(A_new, node.Rect.A);
+            //var leftRect = new Rectangle(A_new, B_new);
+            //var rightRect = MakeRect(rightPoints);
+        
+            _root.LeftChild = new Node(leftRect)
+            {
+                Points = leftPoints
+            };
+            _root.RightChild = new Node(rightRect)
+            {
+                Points = rightPoints
+            };
+
+            Build(leftPoints, _root.LeftChild);
+            Build(rightPoints, _root.RightChild);
         }
         else
         {
             points.Sort((a, b) => a.Y.CompareTo(b.Y)); 
             // сортує відносно longitude; a і b це CoordinatePair з points
+            
+            var middle = points.Count / 2;
+            leftPoints = points.GetRange(0, middle + 1);
+            rightPoints = points.GetRange(middle, points.Count - middle); 
+            
+            var A_new = node.Rect.A;
+            A_new.Y = points[middle].Y;
+
+            var C_new = node.Rect.C;
+            C_new.Y = points[middle].Y;
+            
+            
+            var leftRect = new Rectangle(node.Rect.A, C_new);
+            var rightRect = new Rectangle(A_new, node.Rect.A);
+            //var leftRect = new Rectangle(A_new, B_new);
+            //var rightRect = MakeRect(rightPoints);
+        
+            _root.LeftChild = new Node(leftRect)
+            {
+                Points = leftPoints
+            };
+            _root.RightChild = new Node(rightRect)
+            {
+                Points = rightPoints
+            };
+
+            Build(leftPoints, _root.LeftChild);
+            Build(rightPoints, _root.RightChild);
         }
         _check = !_check; // змінюємо на протилежний 
-
-        var middle = points.Count / 2;
-        var leftPoints = points.GetRange(0, middle); // від нульового елемента до середини
-        var rightPoints = points.GetRange(middle, points.Count - middle); // від середини до останнього
-
-        // still have to come up with this part
-        // as when we divide left/right we change one vertices
-        // and when upper/lower other
         
-        //var A_new = node.Rect.A;
-        //A_new.X = right_points[0].X;
-
-        // not sure about this part either
-        var leftRect = new Rectangle(node.Rect.A, node.Rect.B);
-        
-        var rightRect = MakeRect(rightPoints);
-        
-        _root.LeftChild = new Node(leftRect)
-        { Points = leftPoints };
-        _root.RightChild = new Node(rightRect)
-        { Points = rightPoints };
-
-        Build(leftPoints, _root.LeftChild);
-        Build(rightPoints, _root.RightChild);
     }
 
     private Rectangle MakeRect(List<CoordinatePair> points)
