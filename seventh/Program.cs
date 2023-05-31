@@ -64,4 +64,5 @@ foreach (var line2 in File.ReadAllLines("ukraine_poi.csv"))
 }
 
 var tree = new Rtree();
-tree.Build(all_points);
+tree.Build(all_points, null);
+Console.WriteLine('h');

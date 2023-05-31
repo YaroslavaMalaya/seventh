@@ -42,7 +42,7 @@ public class Node
     public Node RightChild { get; set; }
     public List<CoordinatePair> Points { get; set; }
     
-    public Node(Rectangle rect, Node left = null, Node right = null, List<CoordinatePair> points = null)
+    public Node(Rectangle rect, Node left, Node right, List<CoordinatePair> points = null)
     {
         Rect = rect;
         LeftChild = left;
@@ -56,12 +56,12 @@ public class Rtree
     private Node _root;
     private bool _check; // true - розбиття по Х; false - розбиття по Y;
     
-    public void Build(List<CoordinatePair> points, Node node = null)
+    public void Build(List<CoordinatePair> points, Node node)
     {
         if (node == null)
         {
             var first_rect = MakeRect(points);
-            node = new Node(first_rect);
+            node = new Node(first_rect, null, null);
         }
         _root = node;
 
@@ -104,11 +104,11 @@ public class Rtree
         var leftRect = new Rectangle(_root.Rect.A, new_C);
         var rightRect = new Rectangle(new_A, _root.Rect.A);
 
-        _root.LeftChild = new Node(leftRect)
+        _root.LeftChild = new Node(leftRect, null, null)
         {
             Points = leftPoints
         };
-        _root.RightChild = new Node(rightRect)
+        _root.RightChild = new Node(rightRect, null, null)
         {
             Points = rightPoints
         };
