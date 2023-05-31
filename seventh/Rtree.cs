@@ -42,11 +42,9 @@ public class Node
     public Node RightChild { get; set; }
     public List<CoordinatePair> Points { get; set; }
     
-    public Node(Rectangle rect, Node left, Node right, List<CoordinatePair> points = null)
+    public Node(Rectangle rect, List<CoordinatePair> points = null)
     {
         Rect = rect;
-        LeftChild = left;
-        RightChild = right;
         Points = points;
     }
 }
@@ -54,6 +52,7 @@ public class Node
 public class Rtree
 {
     private Node _root;
+    private Node _current;
     private bool _check; // true - розбиття по Х; false - розбиття по Y;
     
     public void Build(List<CoordinatePair> points, Node node)
@@ -61,13 +60,14 @@ public class Rtree
         if (node == null)
         {
             var first_rect = MakeRect(points);
-            node = new Node(first_rect, null, null);
+            node = new Node(first_rect, points: points);
+            _root = node;
         }
-        _root = node;
+        _current = node;
 
         if (points.Count <= 10)
         {
-            _root.Points = points;
+            _current.Points = points;
             return;
         }
         
@@ -84,8 +84,8 @@ public class Rtree
             leftPoints = points.GetRange(0, middle + 1);
             rightPoints = points.GetRange(middle, points.Count - middle);
             
-            new_A = new CoordinatePair(points[middle].X, _root.Rect.A.Y);
-            new_C = new CoordinatePair(points[middle].X, _root.Rect.C.Y);
+            new_A = new CoordinatePair(points[middle].X, _current.Rect.A.Y);
+            new_C = new CoordinatePair(points[middle].X, _current.Rect.C.Y);
 
         }
         else
@@ -96,26 +96,20 @@ public class Rtree
             leftPoints = points.GetRange(0, middle + 1);
             rightPoints = points.GetRange(middle, points.Count - middle); 
             
-            new_A = new CoordinatePair(_root.Rect.A.X, points[middle].Y);
-            new_C = new CoordinatePair(_root.Rect.C.Y, points[middle].Y);
+            new_A = new CoordinatePair(_current.Rect.A.X, points[middle].Y);
+            new_C = new CoordinatePair(_current.Rect.C.Y, points[middle].Y);
 
         }
         
-        var leftRect = new Rectangle(_root.Rect.A, new_C);
-        var rightRect = new Rectangle(new_A, _root.Rect.A);
+        var leftRect = new Rectangle(_current.Rect.A, new_C);
+        var rightRect = new Rectangle(new_A, _current.Rect.A);
 
-        _root.LeftChild = new Node(leftRect, null, null)
-        {
-            Points = leftPoints
-        };
-        _root.RightChild = new Node(rightRect, null, null)
-        {
-            Points = rightPoints
-        };
-            
+        _current.LeftChild = new Node(leftRect, points: leftPoints);
+        _current.RightChild = new Node(rightRect, points: rightPoints);
+        
         _check = !_check;
-        Build(leftPoints, _root.LeftChild);
-        Build(rightPoints, _root.RightChild);
+        Build(leftPoints, _current.LeftChild);
+        Build(rightPoints, _current.RightChild);
     }
 
     private Rectangle MakeRect(List<CoordinatePair> points)

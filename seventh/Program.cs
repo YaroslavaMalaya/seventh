@@ -1,5 +1,5 @@
 ﻿using seventh;
-
+/*
 Console.WriteLine("\nEnter latitude, longitude and radius (with space):"); // example 49,06183 22,68685 2
 var input = Console.ReadLine().Split(" ");
 var lat = double.Parse(input[0]) * Math.PI / 180;
@@ -42,7 +42,7 @@ else
 {
     Console.WriteLine("No suitable location in this area :(");
 }
-
+*/
 
 // #2
 
