@@ -1,5 +1,5 @@
 ﻿using seventh;
-/*
+
 Console.WriteLine("\nEnter latitude, longitude and radius (with space):"); // example 49,06183 22,68685 2
 var input = Console.ReadLine().Split(" ");
 var lat = double.Parse(input[0]) * Math.PI / 180;
@@ -9,7 +9,7 @@ var radius_earth = 6371.032;
 var result = new List<string>();
 
 // #1
-foreach (var line in File.ReadAllLines("ukraine_poi.csv"))
+/*foreach (var line in File.ReadAllLines("ukraine_poi.csv"))
 {
     var line_el = line.Split(";");
     if (line_el[0] != "")
@@ -41,8 +41,7 @@ if (result.Count > 0)
 else
 {
     Console.WriteLine("No suitable location in this area :(");
-}
-*/
+}*/
 
 // #2
 
@@ -65,4 +64,21 @@ foreach (var line2 in File.ReadAllLines("ukraine_poi.csv"))
 
 var tree = new Rtree();
 tree.Build(all_points, null);
-Console.WriteLine('h');
+
+
+// I'm not sure about it
+var latitudeC = Math.Asin(Math.Sin(lat)*Math.Cos(radius/radius_earth) +
+                      Math.Cos(lat)*Math.Sin(radius/radius_earth)*Math.Cos(90 * Math.PI / 180)) * 180 / Math.PI; // in degrees 
+var latitudeA = Math.Abs(lat -  latitudeC);
+var longitudeA = (lon * Math.PI / 180 + Math.Atan2(Math.Sin(Math.PI / 180)*Math.Sin(radius/radius_earth)*Math.Cos(lat),
+    Math.Cos(radius/radius_earth)-Math.Sin(lat)*Math.Sin(latitudeA))) * 180 / Math.PI; // in degrees 
+var longitudeC = lon - Math.Abs(lon - longitudeA);
+
+// form a rectangle for the main point with radius;
+var lowLeft = new CoordinatePair(latitudeA, longitudeA);
+var upRight = new CoordinatePair(latitudeC, longitudeC);
+var main_rectangle = new Rectangle(lowLeft, upRight);
+
+//var longitudeC = (lon * Math.PI / 180 + Math.Atan2(Math.Sin(90 * Math.PI / 180)*Math.Sin(radius/radius_earth)*Math.Cos(lat)Math.Cos(radius/radius_earth)-Math.Sin(lat)*Math.Sin(latitudeC))) * 180 / Math.PI; // in degrees 
+//var latitudeA = Math.Asin( Math.Sin(lat)*Math.Cos(radius/radius_earth) + Math.Cos(lat)*Math.Sin(radius/radius_earth)*Math.Cos(Math.PI / 180));
+//latitudeA = latitudeA * 180 / Math.PI; // in degrees 

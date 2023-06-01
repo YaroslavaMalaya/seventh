@@ -52,22 +52,22 @@ public class Node
 public class Rtree
 {
     private Node _root;
-    private Node _current;
+    //private Node _current;
     private bool _check; // true - розбиття по Х; false - розбиття по Y;
-    
+    public List<CoordinatePair> result;
+
     public void Build(List<CoordinatePair> points, Node node)
     {
         if (node == null)
         {
             var first_rect = MakeRect(points);
-            node = new Node(first_rect, points: points);
-            _root = node;
+            _root = new Node(first_rect, points: points);
+             node = _root;
         }
-        _current = node;
-
+        
         if (points.Count <= 10)
         {
-            _current.Points = points;
+            node.Points = points;
             return;
         }
         
@@ -84,8 +84,8 @@ public class Rtree
             leftPoints = points.GetRange(0, middle + 1);
             rightPoints = points.GetRange(middle, points.Count - middle);
             
-            new_A = new CoordinatePair(points[middle].X, _current.Rect.A.Y);
-            new_C = new CoordinatePair(points[middle].X, _current.Rect.C.Y);
+            new_A = new CoordinatePair(points[middle].X, node.Rect.A.Y);
+            new_C = new CoordinatePair(points[middle].X, node.Rect.C.Y);
 
         }
         else
@@ -96,22 +96,33 @@ public class Rtree
             leftPoints = points.GetRange(0, middle + 1);
             rightPoints = points.GetRange(middle, points.Count - middle); 
             
-            new_A = new CoordinatePair(_current.Rect.A.X, points[middle].Y);
-            new_C = new CoordinatePair(_current.Rect.C.Y, points[middle].Y);
+            new_A = new CoordinatePair(node.Rect.A.X, points[middle].Y);
+            new_C = new CoordinatePair(node.Rect.C.Y, points[middle].Y);
 
         }
         
-        var leftRect = new Rectangle(_current.Rect.A, new_C);
-        var rightRect = new Rectangle(new_A, _current.Rect.A);
+        var leftRect = new Rectangle(node.Rect.A, new_C);
+        var rightRect = new Rectangle(new_A, node.Rect.A);
 
-        _current.LeftChild = new Node(leftRect, points: leftPoints);
-        _current.RightChild = new Node(rightRect, points: rightPoints);
+        node.LeftChild = new Node(leftRect, points: leftPoints);
+        node.RightChild = new Node(rightRect, points: rightPoints);
         
         _check = !_check;
-        Build(leftPoints, _current.LeftChild);
-        Build(rightPoints, _current.RightChild);
+        Build(leftPoints, node.LeftChild);
+        Build(rightPoints, node.RightChild);
     }
 
+    public List<CoordinatePair>? Find(Rectangle main_rect)
+    {
+        // check if there are points in our root rectangle or not
+        if (_root.Rect.A.X >= main_rect.A.X || _root.Rect.C.X <= main_rect.C.X 
+                                            || _root.Rect.A.Y >= main_rect.A.Y || _root.Rect.C.Y <= main_rect.C.Y)
+        {
+            return null;
+        }
+        return null;
+    }
+    
     private Rectangle MakeRect(List<CoordinatePair> points)
     {
         var listX = new List<double>();
