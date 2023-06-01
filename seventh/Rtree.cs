@@ -33,6 +33,22 @@ public class Rectangle
         //D = new CoordinatePair(C.X, A.Y);
     }
     
+    public bool IfIntersect(Rectangle other)
+    {
+        var a1 = this.A;
+        var c1 = this.C;
+
+        var a2 = other.A;
+        var c2 = other.C;
+
+        if ((a2.Y > c1.Y || a1.Y > c2.Y) // one above other
+            || (a2.X > c1.X || a1.X > c2.X)) // side by side (left or right)
+        {
+            return false;
+        }
+        return true;
+    }
+    
 }
 
 public class Node
