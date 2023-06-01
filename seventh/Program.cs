@@ -74,7 +74,7 @@ var latitudeC = Math.Asin(Math.Sin(lat)*Math.Cos(radius/radiusEarth) +
 var latitudeA = Math.Abs(lat -  latitudeC);
 var longitudeA = (lon * Math.PI / 180 + Math.Atan2(Math.Sin(Math.PI / 180)*Math.Sin(radius/radiusEarth)*Math.Cos(lat),
     Math.Cos(radius/radiusEarth)-Math.Sin(lat)*Math.Sin(latitudeA))) * 180 / Math.PI; // in degrees 
-var longitudeC = lon - Math.Abs(lon - longitudeA);
+var longitudeC = lon + Math.Abs(lon - longitudeA);
 
 // form a rectangle for the main point with radius;
 var lowLeft = new CoordinatePair(latitudeA, longitudeA);

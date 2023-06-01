@@ -68,7 +68,7 @@
       <workItem from="1685086451784" duration="3433000" />
       <workItem from="1685357901094" duration="12389000" />
       <workItem from="1685530228456" duration="1172000" />
-      <workItem from="1685615710414" duration="5434000" />
+      <workItem from="1685615710414" duration="7494000" />
     </task>
     <servers />
   </component>
@@ -97,6 +97,11 @@
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
+    <pin-to-top-manager>
+      <pinned-members>
+        <PinnedItemInfo parentTag="Type#seventh.Node" memberName="LeftChild" />
+      </pinned-members>
+    </pin-to-top-manager>
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

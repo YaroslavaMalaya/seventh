@@ -89,8 +89,8 @@ public class Rtree
         
         List<CoordinatePair> leftPoints;
         List<CoordinatePair> rightPoints;
-        CoordinatePair new_A;
-        CoordinatePair new_C;
+        CoordinatePair newA;
+        CoordinatePair newC;
 
         if (_check)
         {
@@ -100,8 +100,8 @@ public class Rtree
             leftPoints = points.GetRange(0, middle + 1);
             rightPoints = points.GetRange(middle, points.Count - middle);
             
-            new_A = new CoordinatePair(points[middle].X, node.Rect.A.Y);
-            new_C = new CoordinatePair(points[middle].X, node.Rect.C.Y);
+            newA = new CoordinatePair(points[middle].X, node.Rect.A.Y);
+            newC = new CoordinatePair(points[middle].X, node.Rect.C.Y);
 
         }
         else
@@ -112,13 +112,13 @@ public class Rtree
             leftPoints = points.GetRange(0, middle + 1);
             rightPoints = points.GetRange(middle, points.Count - middle); 
             
-            new_A = new CoordinatePair(node.Rect.A.X, points[middle].Y);
-            new_C = new CoordinatePair(node.Rect.C.Y, points[middle].Y);
+            newA = new CoordinatePair(node.Rect.A.X, points[middle].Y);
+            newC = new CoordinatePair(node.Rect.C.Y, points[middle].Y);
 
         }
         
-        var leftRect = new Rectangle(node.Rect.A, new_C);
-        var rightRect = new Rectangle(new_A, node.Rect.A);
+        var leftRect = new Rectangle(node.Rect.A, newC);
+        var rightRect = new Rectangle(newA, node.Rect.A);
 
         node.LeftChild = new Node(leftRect, points: leftPoints);
         node.RightChild = new Node(rightRect, points: rightPoints);
@@ -126,13 +126,22 @@ public class Rtree
         _check = !_check;
         Build(leftPoints, node.LeftChild);
         Build(rightPoints, node.RightChild);
+        if (node.LeftChild == null && node.RightChild == null)
+        {
+            node.Points = points;
+        }
+        else
+        {
+            node.Points = null;
+        }
+        
     }
 
-    public List<CoordinatePair>? Find(Rectangle main_rect)
+    public List<CoordinatePair>? Find(Rectangle mainRect)
     {
         // check if there are points in our root rectangle or not
-        if (_root.Rect.A.X >= main_rect.A.X || _root.Rect.C.X <= main_rect.C.X 
-                                            || _root.Rect.A.Y >= main_rect.A.Y || _root.Rect.C.Y <= main_rect.C.Y)
+        if (_root.Rect.A.X >= mainRect.A.X || _root.Rect.C.X <= mainRect.C.X 
+                                            || _root.Rect.A.Y >= mainRect.A.Y || _root.Rect.C.Y <= mainRect.C.Y)
         {
             return null;
         }
@@ -146,12 +155,12 @@ public class Rtree
         points.ForEach(pair => listX.Add(pair.X));
         points.ForEach(pair => listY.Add(pair.Y));
 
-        var lat_min = listX.Min();
-        var lat_max = listX.Max();
-        var lon_min = listY.Min();
-        var lon_max = listY.Max();
+        var latMin = listX.Min();
+        var latMax = listX.Max();
+        var lonMin = listY.Min();
+        var lonMax = listY.Max();
 
-        return new Rectangle(new CoordinatePair(lat_min, lon_min), 
-            new CoordinatePair(lat_max, lon_max));
+        return new Rectangle(new CoordinatePair(latMin, lonMin), 
+            new CoordinatePair(latMax, lonMax));
     }
 }
