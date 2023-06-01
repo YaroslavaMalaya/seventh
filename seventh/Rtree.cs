@@ -67,10 +67,10 @@ public class Node
 
 public class Rtree
 {
-    private Node _root;
+    public Node _root;
     //private Node _current;
     private bool _check; // true - розбиття по Х; false - розбиття по Y;
-    public List<CoordinatePair> result;
+    public List<CoordinatePair> result = new List<CoordinatePair>();
 
     public void Build(List<CoordinatePair> points, Node node)
     {
@@ -91,41 +91,40 @@ public class Rtree
         List<CoordinatePair> rightPoints;
         CoordinatePair newA;
         CoordinatePair newC;
+        int middle;
 
         if (_check)
         {
             points.Sort((a, b) => a.X.CompareTo(b.X)); // сортує відносно latitude; a і b це CoordinatePair з points
-            
-            var middle = points.Count / 2;
-            leftPoints = points.GetRange(0, middle + 1);
-            rightPoints = points.GetRange(middle, points.Count - middle);
-            
+            take();
             newA = new CoordinatePair(points[middle].X, node.Rect.A.Y);
             newC = new CoordinatePair(points[middle].X, node.Rect.C.Y);
-
         }
         else
         {
             points.Sort((a, b) => a.Y.CompareTo(b.Y)); // сортує відносно longitude; a і b це CoordinatePair з points
-            
-            var middle = points.Count / 2;
-            leftPoints = points.GetRange(0, middle + 1);
-            rightPoints = points.GetRange(middle, points.Count - middle); 
-            
+            take();
             newA = new CoordinatePair(node.Rect.A.X, points[middle].Y);
             newC = new CoordinatePair(node.Rect.C.Y, points[middle].Y);
-
         }
-        
+
+        void take()
+        {
+            middle = points.Count / 2;
+            leftPoints = points.GetRange(0, middle + 1);
+            rightPoints = points.GetRange(middle, points.Count - middle);
+        }
+
         var leftRect = new Rectangle(node.Rect.A, newC);
         var rightRect = new Rectangle(newA, node.Rect.A);
 
-        node.LeftChild = new Node(leftRect, points: leftPoints);
+        node.LeftChild = new Node(leftRect);
         node.RightChild = new Node(rightRect, points: rightPoints);
         
         _check = !_check;
         Build(leftPoints, node.LeftChild);
         Build(rightPoints, node.RightChild);
+        
         if (node.LeftChild == null && node.RightChild == null)
         {
             node.Points = points;
@@ -137,15 +136,39 @@ public class Rtree
         
     }
 
-    public List<CoordinatePair>? Find(Rectangle mainRect)
+    public List<CoordinatePair>? Find(Rectangle mainRect, Node node)
     {
-        // check if there are points in our root rectangle or not
-        if (_root.Rect.A.X >= mainRect.A.X || _root.Rect.C.X <= mainRect.C.X 
-                                            || _root.Rect.A.Y >= mainRect.A.Y || _root.Rect.C.Y <= mainRect.C.Y)
+        //  check if there are points in the rectangle of the root or not
+        if (!_root.Rect.IfIntersect(mainRect))
         {
             return null;
         }
-        return null;
+
+        if (node.LeftChild != null)
+        {
+            if (mainRect.IfIntersect(node.LeftChild.Rect))
+            {
+                Find(mainRect, node.LeftChild);
+            }
+        }
+        if (node.RightChild != null)
+        {
+            if (mainRect.IfIntersect(node.RightChild.Rect))
+            {
+                Find(mainRect, node.RightChild);
+            }
+        }
+        else
+        {
+            // цю частину потім поміняємо і зробимо по гаверсинусу
+            foreach (var pair in node.Points)
+            {
+                result.Add(pair);
+            }
+            // отут треба повернутися до іншогоо нащадка 
+        }
+
+        return result;
     }
     
     private Rectangle MakeRect(List<CoordinatePair> points)
@@ -164,3 +187,11 @@ public class Rtree
             new CoordinatePair(latMax, lonMax));
     }
 }
+
+
+// double coordinateX;
+// double coordinateY;
+// static void Swap(double x, double y)
+// {
+//     (x, y) = (y, x);
+// }

@@ -3,11 +3,11 @@ using seventh;
 
 Console.WriteLine("\nEnter latitude, longitude and radius (with space):"); // example 49,06183 22,68685 2
 var input = Console.ReadLine().Split(" ");
-var lat = double.Parse(input[0], CultureInfo.InvariantCulture) * Math.PI / 180;
-var lon = double.Parse(input[1], CultureInfo.InvariantCulture);
-var radius = double.Parse(input[2]);
+var lat = double.Parse(input[0].Replace(',', '.'), CultureInfo.InvariantCulture) * Math.PI / 180;
+var lon = double.Parse(input[1].Replace(',', '.'), CultureInfo.InvariantCulture);
+var radius = double.Parse(input[2].Replace(',', '.'), CultureInfo.InvariantCulture);
 var radiusEarth = 6371.032;
-var result = new List<string>();
+var result1 = new List<string>();
 
 // #1
 /*foreach (var line in File.ReadAllLines("ukraine_poi.csv"))
@@ -24,16 +24,16 @@ var result = new List<string>();
 
         if (haversine_length <= radius)
         {
-            result.Add(string.Join("; ", line_el[2..].Where(e => e != "")));
+            result1.Add(string.Join("; ", line_el[2..].Where(e => e != "")));
         }
     }
 }
 
 Console.WriteLine("\nList of locations in the area:");
 var count = 1;
-if (result.Count > 0)
+if (result1.Count > 0)
 {
-    foreach (var element in result)
+    foreach (var element in result1)
     {
         Console.WriteLine(count + ". " + element);
         count++;
@@ -58,8 +58,8 @@ foreach (var line2 in File.ReadAllLines("ukraine_poi.csv"))
     var lineSplit = line2.Split(";");
     if (lineSplit[0] != "")
     {
-        allPoints.Add(new CoordinatePair(double.Parse(lineSplit[0], CultureInfo.InvariantCulture), 
-            double.Parse(lineSplit[1], CultureInfo.InvariantCulture), 
+        allPoints.Add(new CoordinatePair(double.Parse(lineSplit[0].Replace(',', '.'), CultureInfo.InvariantCulture), 
+            double.Parse(lineSplit[1].Replace(',', '.'), CultureInfo.InvariantCulture), 
             lineSplit[2], lineSplit[3], lineSplit[4]));
     }
 }
@@ -67,8 +67,6 @@ foreach (var line2 in File.ReadAllLines("ukraine_poi.csv"))
 var tree = new Rtree();
 tree.Build(allPoints, null);
 
-
-// I'm not sure about it
 var latitudeC = Math.Asin(Math.Sin(lat)*Math.Cos(radius/radiusEarth) +
                       Math.Cos(lat)*Math.Sin(radius/radiusEarth)*Math.Cos(90 * Math.PI / 180)) * 180 / Math.PI; // in degrees 
 var latitudeA = Math.Abs(lat -  latitudeC);
@@ -80,6 +78,10 @@ var longitudeC = lon + Math.Abs(lon - longitudeA);
 var lowLeft = new CoordinatePair(latitudeA, longitudeA);
 var upRight = new CoordinatePair(latitudeC, longitudeC);
 var mainRectangle = new Rectangle(lowLeft, upRight);
+var result2 = tree.Find(mainRectangle, tree._root);
+
+
+
 
 //var longitudeC = (lon * Math.PI / 180 + Math.Atan2(Math.Sin(90 * Math.PI / 180)*Math.Sin(radius/radius_earth)*Math.Cos(lat)Math.Cos(radius/radius_earth)-Math.Sin(lat)*Math.Sin(latitudeC))) * 180 / Math.PI; // in degrees 
 //var latitudeA = Math.Asin( Math.Sin(lat)*Math.Cos(radius/radius_earth) + Math.Cos(lat)*Math.Sin(radius/radius_earth)*Math.Cos(Math.PI / 180));
