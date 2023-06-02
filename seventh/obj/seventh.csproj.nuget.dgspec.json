@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "/Users/Yarrochka/Мої файли/Study/IT 3/seventh/seventh/seventh.csproj": {}
+    "C:\\Users\\sofma\\seventh\\seventh\\seventh.csproj": {}
   },
   "projects": {
-    "/Users/Yarrochka/Мої файли/Study/IT 3/seventh/seventh/seventh.csproj": {
+    "C:\\Users\\sofma\\seventh\\seventh\\seventh.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/Yarrochka/Мої файли/Study/IT 3/seventh/seventh/seventh.csproj",
+        "projectUniqueName": "C:\\Users\\sofma\\seventh\\seventh\\seventh.csproj",
         "projectName": "seventh",
-        "projectPath": "/Users/Yarrochka/Мої файли/Study/IT 3/seventh/seventh/seventh.csproj",
-        "packagesPath": "/Users/Yarrochka/.nuget/packages/",
-        "outputPath": "/Users/Yarrochka/Мої файли/Study/IT 3/seventh/seventh/obj/",
+        "projectPath": "C:\\Users\\sofma\\seventh\\seventh\\seventh.csproj",
+        "packagesPath": "C:\\Users\\sofma\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\sofma\\seventh\\seventh\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/Users/Yarrochka/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\sofma\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net7.0"
@@ -53,7 +53,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/Users/Yarrochka/.dotnet/sdk/7.0.101/RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.102\\RuntimeIdentifierGraph.json"
         }
       }
     }

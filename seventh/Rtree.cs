@@ -105,7 +105,7 @@ public class Rtree
             points.Sort((a, b) => a.Y.CompareTo(b.Y)); // сортує відносно longitude; a і b це CoordinatePair з points
             take();
             newA = new CoordinatePair(node.Rect.A.X, points[middle].Y);
-            newC = new CoordinatePair(node.Rect.C.Y, points[middle].Y);
+            newC = new CoordinatePair(node.Rect.C.X, points[middle].Y);
         }
 
         void take()
@@ -116,7 +116,7 @@ public class Rtree
         }
 
         var leftRect = new Rectangle(node.Rect.A, newC);
-        var rightRect = new Rectangle(newA, node.Rect.A);
+        var rightRect = new Rectangle(newA, node.Rect.C);
 
         node.LeftChild = new Node(leftRect);
         node.RightChild = new Node(rightRect, points: rightPoints);
@@ -136,39 +136,42 @@ public class Rtree
         
     }
 
-    public List<CoordinatePair>? Find(Rectangle mainRect, Node node)
+    public List<CoordinatePair> Find(Rectangle mainRect, Node node = null, List<CoordinatePair> res = null)
     {
-        //  check if there are points in the rectangle of the root or not
-        if (!_root.Rect.IfIntersect(mainRect))
+
+        if (res is null)
         {
-            return null;
+            res = new List<CoordinatePair>();
+        }
+        
+        if (node is null)
+        {
+            node = _root;
+        }
+        
+        //  check if there are points in the rectangle of the root or not
+        if (!node.Rect.IfIntersect(mainRect))
+        {
+            return res;
         }
 
-        if (node.LeftChild != null)
-        {
-            if (mainRect.IfIntersect(node.LeftChild.Rect))
-            {
-                Find(mainRect, node.LeftChild);
-            }
-        }
-        if (node.RightChild != null)
-        {
-            if (mainRect.IfIntersect(node.RightChild.Rect))
-            {
-                Find(mainRect, node.RightChild);
-            }
-        }
-        else
+        if (node.LeftChild is null && node.RightChild is null)
         {
             // цю частину потім поміняємо і зробимо по гаверсинусу
             foreach (var pair in node.Points)
             {
-                result.Add(pair);
+                res.Add(pair);
             }
             // отут треба повернутися до іншогоо нащадка 
         }
+        else
+        {
+            res.Concat(Find(mainRect, node.LeftChild, res));
+            res.Concat(Find(mainRect, node.RightChild, res));
+            // res = Find(mainRect, node.RightChild, res);
+        }
 
-        return result;
+        return res;
     }
     
     private Rectangle MakeRect(List<CoordinatePair> points)
