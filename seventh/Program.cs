@@ -45,13 +45,6 @@ else
 }*/
 
 // #2
-
-// створити клас для точок прямокутника
-// break коли менше 10 точок в прямокутнику
-// пошук потоібних точок за перетином прямокутників 
-// спускатися по дереву(по нащадкам) і переіряти чи входить в цей прямокутник наша точка(задана) - рекурсивно 
-// потім пройтись по кожній точці з прямокутника і додати у список
-
 var allPoints = new List<CoordinatePair>();
 foreach (var line2 in File.ReadAllLines("ukraine_poi.csv"))
 {
@@ -67,6 +60,7 @@ foreach (var line2 in File.ReadAllLines("ukraine_poi.csv"))
 var tree = new Rtree();
 tree.Build(allPoints, null);
 
+var initial_point = new CoordinatePair(lat, lon);
 var latitudeC = Math.Asin(Math.Sin(lat)*Math.Cos(radius/radiusEarth) +
                       Math.Cos(lat)*Math.Sin(radius/radiusEarth)*Math.Cos(90 * Math.PI / 180)) * 180 / Math.PI; // in degrees 
 var latitudeA = Math.Abs(lat -  latitudeC);
@@ -79,9 +73,23 @@ var longitudeC = lon + Math.Abs(lon - longitudeA);
 // form a rectangle for the main point with radius;
 var lowLeft = new CoordinatePair(latitudeA, longitudeA);
 var upRight = new CoordinatePair(latitudeC, longitudeC);
-var mainRectangle = new Rectangle(lowLeft, upRight);
+var mainRectangle = new Rectangle(lowLeft, upRight, radius, initial_point);
 var result2 = tree.Find(mainRectangle);
 
+Console.WriteLine("\nList of locations in the area:");
+var count = 1;
+if (result2.Count > 0)
+{
+    foreach (var element in result2)
+    {
+        Console.WriteLine(count + ". " + element);
+        count++;
+    }
+}
+else
+{
+    Console.WriteLine("No suitable location in this area :(");
+}
 Console.WriteLine('h');
 
 

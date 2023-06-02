@@ -4,18 +4,23 @@
     <projectFile>seventh.csproj</projectFile>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b87cc147-90d8-40ab-83f6-7838e079846b" name="Changes" comment="" />
+    <list default="true" id="b87cc147-90d8-40ab-83f6-7838e079846b" name="Changes" comment="added some helpful rows (I guess)">
+      <change beforePath="$PROJECT_DIR$/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Program.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Rtree.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Rtree.cs" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/b42dbe862dd51fb5e77e5fe0ab92bfe2f4e9d579a34b2110f5a774eaaf7ec/Number.Parsing.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/7cb4d84bac2680a5cad7c0b7e625a86b1a85fa4eb0fa7e91ee7059381c90c892/Number.Parsing.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/Yarrochka/Мої файли/Study/IT 3/seventh/seventh/Program.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
+  <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="false" />
   <component name="ProjectId" id="2QJzOtEmIm7okih2JiJUrX1uajx" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -76,6 +81,7 @@
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+  <component name="UnityCheckinConfiguration" checkUnsavedScenes="false" />
   <component name="UnityUnitTestConfiguration" currentTestLauncher="NUnit" />
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
@@ -85,15 +91,8 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/Program.cs</url>
-          <line>84</line>
-          <properties documentPath="C:\Users\sofma\seventh\seventh\Program.cs" initialLine="84" containingFunctionPresentation="">
-            <startOffsets>
-              <option value="3094" />
-            </startOffsets>
-            <endOffsets>
-              <option value="3117" />
-            </endOffsets>
-          </properties>
+          <line>92</line>
+          <properties documentPath="C:\Users\sofma\seventh\seventh\Program.cs" initialLine="84" containingFunctionPresentation="" />
           <option name="timeStamp" value="4" />
         </line-breakpoint>
       </breakpoints>

@@ -24,11 +24,15 @@ public class Rectangle
 {
     public CoordinatePair A { get; } // lat_min lon_min
     public CoordinatePair C { get; } // lat_max lon_max
+    public double? Radius { get; }
+    public CoordinatePair? Center { get; set; }
 
-    public Rectangle(CoordinatePair lowLeft, CoordinatePair upRight)
+    public Rectangle(CoordinatePair lowLeft, CoordinatePair upRight, double? radius = null, CoordinatePair? center = null)
     {
         A = lowLeft;
         C = upRight;
+        Radius = radius;
+        Center = center;
         //B = new CoordinatePair(A.X, C.Y);
         //D = new CoordinatePair(C.X, A.Y);
     }
@@ -157,12 +161,22 @@ public class Rtree
 
         if (node.LeftChild is null && node.RightChild is null)
         {
-            // цю частину потім поміняємо і зробимо по гаверсинусу
-            foreach (var pair in node.Points)
+            foreach (var point in node.Points)
             {
-                res.Add(pair);
+                var lat = mainRect.Center.X * Math.PI / 180;
+                var lon = mainRect.Center.Y * Math.PI / 180;   
+                var lat2 = point.X  * Math.PI / 180;
+                var lon2 = point.Y * Math.PI / 180;
+                var lat3 = (lat - lat2);
+                var lon3 = (lon - lon2);
+                var haversine_length = 2 * 6371.032 * Math.Asin(Math.Sqrt(Math.Abs(
+                        Math.Pow(Math.Sin(lat3 / 2), 2) + Math.Cos(lat) * Math.Cos(lat2) * Math.Pow(Math.Sin(lon3 / 2), 2))));
+
+                if (haversine_length <= mainRect.Radius)
+                {
+                    res.Add(point);
+                }
             }
-            // отут треба повернутися до іншогоо нащадка 
         }
         else
         {
