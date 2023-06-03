@@ -1,99 +1,128 @@
-﻿using System.Globalization;
+﻿using System.Diagnostics;
+using System.Globalization;
 using seventh;
-
-Console.WriteLine("\nEnter latitude, longitude and radius (with space):"); // example 50,4532 30,5183 20
-var input = Console.ReadLine().Split(" ");
-var lat = double.Parse(input[0].Replace(',', '.'), CultureInfo.InvariantCulture) * Math.PI / 180;
-var lon = double.Parse(input[1].Replace(',', '.'), CultureInfo.InvariantCulture);
-var radius = double.Parse(input[2].Replace(',', '.'), CultureInfo.InvariantCulture);
 var radiusEarth = 6371.032;
-var result1 = new List<string>();
 
-// #1
-/*foreach (var line in File.ReadAllLines("ukraine_poi.csv"))
+while(true)
 {
-    var line_el = line.Split(";");
-    if (line_el[0] != "")
-    {
-        var lat2 = double.Parse(line_el[0]) * Math.PI / 180;
-        var lon2 = double.Parse(line_el[1]);
-        var lat3 = (lat - lat2) * Math.PI / 180;
-        var lon3 = (lon - lon2) * Math.PI / 180;
-        var haversine_length = 2 * radiusEarth * Math.Asin(Math.Sqrt(Math.Abs(
-            Math.Pow(Math.Sin(lat3 / 2), 2) + Math.Cos(lat) * Math.Cos(lat2) * Math.Pow(Math.Sin(lon3 / 2), 2))));
+    Console.ForegroundColor = ConsoleColor.Magenta;
+    Console.WriteLine("\nEnter latitude, longitude and radius (with space):"); // example 48,5378 37,69629 0.5
+    Console.ForegroundColor = ConsoleColor.White;
+    var input = Console.ReadLine().Split(" ");
+    var lat = double.Parse(input[0].Replace(',', '.'), CultureInfo.InvariantCulture) * Math.PI / 180;
+    var lon = double.Parse(input[1].Replace(',', '.'), CultureInfo.InvariantCulture) * Math.PI / 180;
+    var radius = double.Parse(input[2].Replace(',', '.'), CultureInfo.InvariantCulture);
 
-        if (haversine_length <= radius)
+    // #1
+    var sw1 = new Stopwatch();
+    sw1.Start();
+    var result1 = new List<List<string>>();
+    foreach (var line in File.ReadAllLines("ukraine_poi.csv"))
+    {
+        var line_el = line.Split(";");
+        if (line_el[0] != "")
         {
-            result1.Add(string.Join("; ", line_el[2..].Where(e => e != "")));
+            var lat2 = double.Parse(line_el[0].Replace(',', '.'), CultureInfo.InvariantCulture) * Math.PI / 180;
+            var lon2 = double.Parse(line_el[1].Replace(',', '.'), CultureInfo.InvariantCulture) * Math.PI / 180;
+            var lat3 = (lat2 - lat);
+            var lon3 = (lon2 - lon);
+            var haversine_length = 2 * radiusEarth * Math.Asin(Math.Sqrt(Math.Abs(
+                Math.Pow(Math.Sin(lat3 / 2), 2) + Math.Cos(lat) * Math.Cos(lat2) * Math.Pow(Math.Sin(lon3 / 2), 2))));
+
+            if (haversine_length <= radius)
+            {
+                var point = new List<string>();
+                point.Add(string.Join("; ", line_el[2..].Select(e => string.IsNullOrEmpty(e) ? "NaN" : e)));
+                result1.Add(point);
+            }
         }
     }
+
+    Print(result1);
+    sw1.Stop();
+    Console.ForegroundColor = ConsoleColor.Magenta;
+    Console.WriteLine($"Elapsed time: {sw1.Elapsed}");
+    Console.ForegroundColor = ConsoleColor.White;
+
+
+    // #2
+    var sw2 = new Stopwatch();
+    sw2.Start();
+    var allPoints = new List<CoordinatePair>();
+    foreach (var line2 in File.ReadAllLines("ukraine_poi.csv"))
+    {
+        var lineSplit = line2.Split(";");
+        if (lineSplit[0] != "")
+        {
+            allPoints.Add(new CoordinatePair(double.Parse(lineSplit[0].Replace(',', '.'), CultureInfo.InvariantCulture),
+                double.Parse(lineSplit[1].Replace(',', '.'), CultureInfo.InvariantCulture), lineSplit[2], lineSplit[3],
+                lineSplit[4], lineSplit[5]));
+        }
+    }
+
+    var tree = new Rtree();
+    tree.Build(allPoints);
+    sw1.Stop();
+    Console.ForegroundColor = ConsoleColor.Magenta;
+    Console.WriteLine($"\nElapsed time (for building): {sw2.Elapsed}");
+    Console.ForegroundColor = ConsoleColor.White;
+
+
+    var sw3 = new Stopwatch();
+    sw3.Start();
+    var initial_point = new CoordinatePair(lat, lon);
+    var latC1 = Latitude(lat, 90, radius);
+    var longC1 = longitude(lon, lat, latC1, 90, radius);
+    var latitudeC = Latitude(latC1, 0, radius);
+    var longitudeC = longitude(longC1, latC1, latitudeC, 0, radius) * 180 / Math.PI;
+    latitudeC *= 180 / Math.PI;
+    var latA = Latitude(lat, -90, radius);
+    var longA = longitude(lon, lat, latA, -90, radius);
+    var latitudeA = Latitude(latA, 180, radius);
+    var longitudeA = longitude(longA, latA, latitudeA, 180, radius) * 180 / Math.PI;
+    latitudeA *= 180 / Math.PI;
+    // form a rectangle for the main point (with radius);
+    var lowLeft = new CoordinatePair(latitudeA, longitudeA);
+    var upRight = new CoordinatePair(latitudeC, longitudeC);
+    var mainRectangle = new Rectangle(lowLeft, upRight, radius, initial_point);
+
+    var result2 = tree.Find(mainRectangle);
+    Print(result2);
+    sw3.Stop();
+    Console.ForegroundColor = ConsoleColor.Magenta;
+    Console.WriteLine($"Elapsed time (for finding): {sw3.Elapsed}");
+    Console.ForegroundColor = ConsoleColor.White;
 }
 
-Console.WriteLine("\nList of locations in the area:");
-var count = 1;
-if (result1.Count > 0)
+
+
+double Latitude(double lat, double degree, double radius)
 {
-    foreach (var element in result1)
+    return Math.Asin(Math.Sin(lat) * Math.Cos(radius / radiusEarth) +
+                     Math.Cos(lat) * Math.Sin(radius / radiusEarth) * Math.Cos(degree * Math.PI / 180));
+}
+
+double longitude(double lon, double lat, double latThis, double degree, double radius)
+{ 
+    return lon + Math.Atan2(Math.Sin(degree * Math.PI / 180) * Math.Sin(radius/radiusEarth) * Math.Cos(lat),
+        Math.Cos(radius/radiusEarth) - Math.Sin(lat)*Math.Sin(latThis));
+}
+
+void Print(List<List<string>> results)
+{
+    Console.ForegroundColor = ConsoleColor.Magenta;
+    Console.WriteLine("\nList of locations in the area:");
+    Console.ForegroundColor = ConsoleColor.White;
+    var i = 1;
+    if (results.Count > 0)
     {
-        Console.WriteLine(count + ". " + element);
-        count++;
+        foreach (var element in results)
+        {
+            Console.WriteLine($"{i++}. {string.Join("; ", element)}");
+        }
+    }
+    else
+    {
+        Console.WriteLine("No suitable location in this area :(");
     }
 }
-else
-{
-    Console.WriteLine("No suitable location in this area :(");
-}*/
-
-// #2
-var allPoints = new List<CoordinatePair>();
-foreach (var line2 in File.ReadAllLines("ukraine_poi.csv"))
-{
-    var lineSplit = line2.Split(";");
-    if (lineSplit[0] != "")
-    {
-        allPoints.Add(new CoordinatePair(double.Parse(lineSplit[0].Replace(',', '.'), CultureInfo.InvariantCulture), 
-            double.Parse(lineSplit[1].Replace(',', '.'), CultureInfo.InvariantCulture), 
-            lineSplit[2], lineSplit[3], lineSplit[4]));
-    }
-}
-
-var tree = new Rtree();
-tree.Build(allPoints, null);
-
-var initial_point = new CoordinatePair(lat, lon);
-var latitudeC = Math.Asin(Math.Sin(lat)*Math.Cos(radius/radiusEarth) +
-                      Math.Cos(lat)*Math.Sin(radius/radiusEarth)*Math.Cos(90 * Math.PI / 180)) * 180 / Math.PI; // in degrees 
-var latitudeA = Math.Abs(lat -  latitudeC);
-var longitudeA = (lon * Math.PI / 180 + Math.Atan2(Math.Sin(Math.PI / 180)*Math.Sin(radius/radiusEarth)*Math.Cos(lat),
-    Math.Cos(radius/radiusEarth)-Math.Sin(lat)*Math.Sin(latitudeA))) * 180 / Math.PI; // in degrees 
-var longitudeC = lon + Math.Abs(lon - longitudeA);
-
-
-
-// form a rectangle for the main point with radius;
-var lowLeft = new CoordinatePair(latitudeA, longitudeA);
-var upRight = new CoordinatePair(latitudeC, longitudeC);
-var mainRectangle = new Rectangle(lowLeft, upRight, radius, initial_point);
-var result2 = tree.Find(mainRectangle);
-
-Console.WriteLine("\nList of locations in the area:");
-var count = 1;
-if (result2.Count > 0)
-{
-    foreach (var element in result2)
-    {
-        Console.WriteLine(count + ". " + element);
-        count++;
-    }
-}
-else
-{
-    Console.WriteLine("No suitable location in this area :(");
-}
-Console.WriteLine('h');
-
-
-
-//var longitudeC = (lon * Math.PI / 180 + Math.Atan2(Math.Sin(90 * Math.PI / 180)*Math.Sin(radius/radius_earth)*Math.Cos(lat)Math.Cos(radius/radius_earth)-Math.Sin(lat)*Math.Sin(latitudeC))) * 180 / Math.PI; // in degrees 
-//var latitudeA = Math.Asin( Math.Sin(lat)*Math.Cos(radius/radius_earth) + Math.Cos(lat)*Math.Sin(radius/radius_earth)*Math.Cos(Math.PI / 180));
-//latitudeA = latitudeA * 180 / Math.PI; // in degrees 

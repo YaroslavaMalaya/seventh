@@ -9,18 +9,18 @@
 /Users/Yarrochka/Мої файли/Study/IT 3/seventh/seventh/obj/Debug/net7.0/seventh.dll
 /Users/Yarrochka/Мої файли/Study/IT 3/seventh/seventh/obj/Debug/net7.0/refint/seventh.dll
 /Users/Yarrochka/Мої файли/Study/IT 3/seventh/seventh/obj/Debug/net7.0/seventh.pdb
-C:\Users\sofma\seventh\seventh\bin\Debug\net7.0\seventh.exe
-C:\Users\sofma\seventh\seventh\bin\Debug\net7.0\seventh.deps.json
-C:\Users\sofma\seventh\seventh\bin\Debug\net7.0\seventh.runtimeconfig.json
-C:\Users\sofma\seventh\seventh\bin\Debug\net7.0\seventh.dll
-C:\Users\sofma\seventh\seventh\bin\Debug\net7.0\seventh.pdb
-C:\Users\sofma\seventh\seventh\obj\Debug\net7.0\seventh.csproj.AssemblyReference.cache
-C:\Users\sofma\seventh\seventh\obj\Debug\net7.0\seventh.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\sofma\seventh\seventh\obj\Debug\net7.0\seventh.AssemblyInfoInputs.cache
-C:\Users\sofma\seventh\seventh\obj\Debug\net7.0\seventh.AssemblyInfo.cs
-C:\Users\sofma\seventh\seventh\obj\Debug\net7.0\seventh.csproj.CoreCompileInputs.cache
-C:\Users\sofma\seventh\seventh\obj\Debug\net7.0\seventh.dll
-C:\Users\sofma\seventh\seventh\obj\Debug\net7.0\refint\seventh.dll
-C:\Users\sofma\seventh\seventh\obj\Debug\net7.0\seventh.pdb
-C:\Users\sofma\seventh\seventh\obj\Debug\net7.0\seventh.genruntimeconfig.cache
-C:\Users\sofma\seventh\seventh\obj\Debug\net7.0\ref\seventh.dll
+C:/Users/sofma/seventh/seventh/bin/Debug/net7.0/seventh.exe
+C:/Users/sofma/seventh/seventh/bin/Debug/net7.0/seventh.deps.json
+C:/Users/sofma/seventh/seventh/bin/Debug/net7.0/seventh.runtimeconfig.json
+C:/Users/sofma/seventh/seventh/bin/Debug/net7.0/seventh.dll
+C:/Users/sofma/seventh/seventh/bin/Debug/net7.0/seventh.pdb
+C:/Users/sofma/seventh/seventh/obj/Debug/net7.0/seventh.csproj.AssemblyReference.cache
+C:/Users/sofma/seventh/seventh/obj/Debug/net7.0/seventh.GeneratedMSBuildEditorConfig.editorconfig
+C:/Users/sofma/seventh/seventh/obj/Debug/net7.0/seventh.AssemblyInfoInputs.cache
+C:/Users/sofma/seventh/seventh/obj/Debug/net7.0/seventh.AssemblyInfo.cs
+C:/Users/sofma/seventh/seventh/obj/Debug/net7.0/seventh.csproj.CoreCompileInputs.cache
+C:/Users/sofma/seventh/seventh/obj/Debug/net7.0/seventh.dll
+C:/Users/sofma/seventh/seventh/obj/Debug/net7.0/refint/seventh.dll
+C:/Users/sofma/seventh/seventh/obj/Debug/net7.0/seventh.pdb
+C:/Users/sofma/seventh/seventh/obj/Debug/net7.0/seventh.genruntimeconfig.cache
+C:/Users/sofma/seventh/seventh/obj/Debug/net7.0/ref/seventh.dll

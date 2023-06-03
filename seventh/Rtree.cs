@@ -5,18 +5,18 @@ public class CoordinatePair
     public double X { get; set; } // latitude
     public double Y { get; set; } // longitude
     public string? Place1 { get; }
-    public string Place2 { get; }
-    public string Name { get; }
-    public string Address { get; }
+    public string? Place2 { get; }
+    public string? Name { get; }
+    public string? Address { get; }
     
-    public CoordinatePair(double x, double y, string place1 = null, string place2 = null, string name = null, string address = null)
+    public CoordinatePair(double x, double y, string? place1 = null, string place2 = null, string name = null, string address = null)
     {
         X = x;
         Y = y;
         Place1 = place1 != "" ? place1 : "NaN"; 
         Place2 = place2 != "" ? place2 : "NaN"; 
-        Name = name != "" ? place1 : "NaN"; 
-        Address = address != "" ? place1 : "NaN";
+        Name = name != "" ? name : "NaN"; 
+        Address = address != "" ? address : "NaN";
     }
 }
 
@@ -33,8 +33,6 @@ public class Rectangle
         C = upRight;
         Radius = radius;
         Center = center;
-        //B = new CoordinatePair(A.X, C.Y);
-        //D = new CoordinatePair(C.X, A.Y);
     }
     
     public bool IfIntersect(Rectangle other)
@@ -71,12 +69,11 @@ public class Node
 
 public class Rtree
 {
-    public Node _root;
-    //private Node _current;
+    private Node? _root;
     private bool _check; // true - розбиття по Х; false - розбиття по Y;
-    public List<CoordinatePair> result = new List<CoordinatePair>();
-
-    public void Build(List<CoordinatePair> points, Node node)
+    private const double radiusEarth = 6371.032;
+    
+    public void Build(List<CoordinatePair> points, Node? node = null)
     {
         if (node == null)
         {
@@ -115,7 +112,7 @@ public class Rtree
         void take()
         {
             middle = points.Count / 2;
-            leftPoints = points.GetRange(0, middle + 1);
+            leftPoints = points.GetRange(0, middle);
             rightPoints = points.GetRange(middle, points.Count - middle);
         }
 
@@ -140,12 +137,11 @@ public class Rtree
         
     }
 
-    public List<CoordinatePair> Find(Rectangle mainRect, Node node = null, List<CoordinatePair> res = null)
+    public List<List<string>> Find(Rectangle mainRect, List<List<string>> res = null, Node node = null)
     {
-
         if (res is null)
         {
-            res = new List<CoordinatePair>();
+            res = new List<List<string>>();
         }
         
         if (node is null)
@@ -159,30 +155,35 @@ public class Rtree
             return res;
         }
 
-        if (node.LeftChild is null && node.RightChild is null)
+        if (node.LeftChild is null || node.RightChild is null)
         {
             foreach (var point in node.Points)
             {
-                var lat = mainRect.Center.X * Math.PI / 180;
-                var lon = mainRect.Center.Y * Math.PI / 180;   
-                var lat2 = point.X  * Math.PI / 180;
-                var lon2 = point.Y * Math.PI / 180;
-                var lat3 = (lat - lat2);
-                var lon3 = (lon - lon2);
-                var haversine_length = 2 * 6371.032 * Math.Asin(Math.Sqrt(Math.Abs(
-                        Math.Pow(Math.Sin(lat3 / 2), 2) + Math.Cos(lat) * Math.Cos(lat2) * Math.Pow(Math.Sin(lon3 / 2), 2))));
+                var lat = mainRect.Center.X;
+                var lat2 = point.X * Math.PI / 180;
+                var lat3 = (lat2 - lat);
+                var lon3 = (point.Y * Math.PI / 180) - mainRect.Center.Y;
+                var haversine_length = 2 * radiusEarth * Math.Asin(Math.Sqrt(Math.Abs(
+                    Math.Pow(Math.Sin(lat3 / 2), 2) + Math.Cos(lat) * Math.Cos(lat2) * Math.Pow(Math.Sin(lon3 / 2), 2))));
 
                 if (haversine_length <= mainRect.Radius)
                 {
-                    res.Add(point);
+                    var place = new List<string>
+                    {
+                        point.Place1,
+                        point.Place2,
+                        point.Name,
+                        point.Address
+                    };
+
+                    res.Add(place);
                 }
             }
         }
         else
         {
-            res.Concat(Find(mainRect, node.LeftChild, res));
-            res.Concat(Find(mainRect, node.RightChild, res));
-            // res = Find(mainRect, node.RightChild, res);
+            res.Concat(Find(mainRect, res, node.LeftChild));
+            res.Concat(Find(mainRect, res, node.RightChild));
         }
 
         return res;
@@ -204,11 +205,3 @@ public class Rtree
             new CoordinatePair(latMax, lonMax));
     }
 }
-
-
-// double coordinateX;
-// double coordinateY;
-// static void Swap(double x, double y)
-// {
-//     (x, y) = (y, x);
-// }

@@ -4,9 +4,17 @@
     <projectFile>seventh.csproj</projectFile>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b87cc147-90d8-40ab-83f6-7838e079846b" name="Changes" comment="added some helpful rows (I guess)">
+    <list default="true" id="b87cc147-90d8-40ab-83f6-7838e079846b" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.seventh.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.seventh.dir/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Program.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Rtree.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Rtree.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/Debug/net7.0/seventh.dll" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Debug/net7.0/seventh.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/Debug/net7.0/seventh.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Debug/net7.0/seventh.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/obj/Debug/net7.0/ref/seventh.dll" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net7.0/ref/seventh.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/obj/Debug/net7.0/refint/seventh.dll" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net7.0/refint/seventh.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/obj/Debug/net7.0/seventh.csproj.FileListAbsolute.txt" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net7.0/seventh.csproj.FileListAbsolute.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/obj/Debug/net7.0/seventh.dll" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net7.0/seventh.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/obj/Debug/net7.0/seventh.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net7.0/seventh.pdb" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -15,6 +23,7 @@
   </component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/7cb4d84bac2680a5cad7c0b7e625a86b1a85fa4eb0fa7e91ee7059381c90c892/Number.Parsing.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/Yarrochka/Мої файли/Study/IT 3/seventh/seventh/Program.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///Users/Yarrochka/Мої файли/Study/IT 3/seventh/seventh/Program.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
@@ -26,22 +35,23 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "XThreadsFramesViewSplitterKey": "0.3710692",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;rider.external.source.directories&quot;: [
-      &quot;C:\\Users\\sofma\\AppData\\Roaming\\JetBrains\\Rider2022.3\\resharper-host\\DecompilerCache&quot;,
-      &quot;C:\\Users\\sofma\\AppData\\Roaming\\JetBrains\\Rider2022.3\\resharper-host\\SourcesCache&quot;,
-      &quot;C:\\Users\\sofma\\AppData\\Local\\Symbols\\src&quot;
+  "keyToStringList": {
+    "rider.external.source.directories": [
+      "C:\\Users\\sofma\\AppData\\Roaming\\JetBrains\\Rider2022.3\\resharper-host\\DecompilerCache",
+      "C:\\Users\\sofma\\AppData\\Roaming\\JetBrains\\Rider2022.3\\resharper-host\\SourcesCache",
+      "C:\\Users\\sofma\\AppData\\Local\\Symbols\\src"
     ]
   }
-}</component>
+}]]></component>
   <component name="RunManager">
     <configuration name="seventh" type="DotNetProject" factoryName=".NET Project">
       <option name="EXE_PATH" value="" />
@@ -76,6 +86,14 @@
       <workItem from="1685615710414" duration="7494000" />
       <workItem from="1685689117433" duration="3686000" />
     </task>
+    <task id="LOCAL-00001" summary="haversine in Find()">
+      <created>1685694064418</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1685694064418</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -85,22 +103,15 @@
   <component name="UnityUnitTestConfiguration" currentTestLauncher="NUnit" />
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
+    <MESSAGE value="haversine in Find()" />
+    <option name="LAST_COMMIT_MESSAGE" value="haversine in Find()" />
   </component>
   <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/Program.cs</url>
-          <line>92</line>
-          <properties documentPath="C:\Users\sofma\seventh\seventh\Program.cs" initialLine="84" containingFunctionPresentation="" />
-          <option name="timeStamp" value="4" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
     <pin-to-top-manager>
       <pinned-members>
         <PinnedItemInfo parentTag="Type#seventh.Node" memberName="LeftChild" />
         <PinnedItemInfo parentTag="Frame#Program.&lt;Main&gt;$" memberName="lon" />
+        <PinnedItemInfo parentTag="Frame#Program.&lt;Main&gt;$" memberName="upRight" />
       </pinned-members>
     </pin-to-top-manager>
   </component>
