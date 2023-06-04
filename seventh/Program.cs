@@ -3,6 +3,25 @@ using System.Globalization;
 using seventh;
 var radiusEarth = 6371.032;
 
+// building a tree
+var sw2 = new Stopwatch();
+sw2.Start();
+var allPoints = new List<CoordinatePair>();
+foreach (var line2 in File.ReadAllLines("ukraine_poi.csv"))
+{
+    var lineSplit = line2.Split(";");
+    if (lineSplit[0] != "")
+    {
+        allPoints.Add(new CoordinatePair(double.Parse(lineSplit[0].Replace(',', '.'), CultureInfo.InvariantCulture),
+            double.Parse(lineSplit[1].Replace(',', '.'), CultureInfo.InvariantCulture), lineSplit[2], lineSplit[3],
+            lineSplit[4], lineSplit[5]));
+    }
+}
+
+var tree = new Rtree();
+tree.Build(allPoints);
+sw2.Stop();
+
 while(true)
 {
     Console.ForegroundColor = ConsoleColor.Magenta;
@@ -46,28 +65,10 @@ while(true)
 
 
     // #2
-    var sw2 = new Stopwatch();
-    sw2.Start();
-    var allPoints = new List<CoordinatePair>();
-    foreach (var line2 in File.ReadAllLines("ukraine_poi.csv"))
-    {
-        var lineSplit = line2.Split(";");
-        if (lineSplit[0] != "")
-        {
-            allPoints.Add(new CoordinatePair(double.Parse(lineSplit[0].Replace(',', '.'), CultureInfo.InvariantCulture),
-                double.Parse(lineSplit[1].Replace(',', '.'), CultureInfo.InvariantCulture), lineSplit[2], lineSplit[3],
-                lineSplit[4], lineSplit[5]));
-        }
-    }
-
-    var tree = new Rtree();
-    tree.Build(allPoints);
-    sw1.Stop();
     Console.ForegroundColor = ConsoleColor.Magenta;
     Console.WriteLine($"\nElapsed time (for building): {sw2.Elapsed}");
     Console.ForegroundColor = ConsoleColor.White;
-
-
+    
     var sw3 = new Stopwatch();
     sw3.Start();
     var initial_point = new CoordinatePair(lat, lon);

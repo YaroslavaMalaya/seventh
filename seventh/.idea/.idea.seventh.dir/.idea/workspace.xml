@@ -4,15 +4,11 @@
     <projectFile>seventh.csproj</projectFile>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b87cc147-90d8-40ab-83f6-7838e079846b" name="Changes" comment="">
+    <list default="true" id="b87cc147-90d8-40ab-83f6-7838e079846b" name="Changes" comment="fixed haversine and added &quot;elapsed time&quot;">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.seventh.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.seventh.dir/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Program.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Rtree.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Rtree.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bin/Debug/net7.0/seventh.dll" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Debug/net7.0/seventh.dll" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bin/Debug/net7.0/seventh.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Debug/net7.0/seventh.pdb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/Debug/net7.0/ref/seventh.dll" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net7.0/ref/seventh.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/Debug/net7.0/refint/seventh.dll" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net7.0/refint/seventh.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/Debug/net7.0/seventh.csproj.FileListAbsolute.txt" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net7.0/seventh.csproj.FileListAbsolute.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/obj/Debug/net7.0/seventh.dll" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net7.0/seventh.dll" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/obj/Debug/net7.0/seventh.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net7.0/seventh.pdb" afterDir="false" />
     </list>
@@ -23,6 +19,7 @@
   </component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/7cb4d84bac2680a5cad7c0b7e625a86b1a85fa4eb0fa7e91ee7059381c90c892/Number.Parsing.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/Yarrochka/Мої файли/Study/IT 3/seventh/seventh/Program.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///Users/Yarrochka/Мої файли/Study/IT 3/seventh/seventh/Program.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///Users/Yarrochka/Мої файли/Study/IT 3/seventh/seventh/Program.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
@@ -93,7 +90,14 @@
       <option name="project" value="LOCAL" />
       <updated>1685694064418</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="fixed haversine and added &quot;elapsed time&quot;">
+      <created>1685824053461</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1685824053461</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -104,7 +108,8 @@
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
     <MESSAGE value="haversine in Find()" />
-    <option name="LAST_COMMIT_MESSAGE" value="haversine in Find()" />
+    <MESSAGE value="fixed haversine and added &quot;elapsed time&quot;" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixed haversine and added &quot;elapsed time&quot;" />
   </component>
   <component name="XDebuggerManager">
     <pin-to-top-manager>
